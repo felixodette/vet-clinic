@@ -1,5 +1,7 @@
 /* Database schema to keep the structure of entire database. */
 
+ALTER SEQUENCE id RESTART WITH 1;
+
 DROP TABLE IF EXISTS animals;
 CREATE TABLE animals (
     id serial PRIMARY KEY,
@@ -30,3 +32,29 @@ ALTER TABLE animals
 
 ALTER TABLE animals
   ADD FOREIGN KEY (owner_id) REFERENCES owners (id);
+
+-- Create a table named vets with the following columns:
+-- id: integer (set it as autoincremented PRIMARY KEY)
+-- name: string
+-- age: integer
+-- date_of_graduation: date
+DROP TABLE IF EXISTS vets;
+CREATE TABLE vets (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100),
+    age INT,
+    date_of_graduation DATE
+);
+
+DROP TABLE IF EXISTS specialization;
+CREATE TABLE specialization (
+    vet_id INT,
+    species_id INT
+);
+
+DROP TABLE IF EXISTS visits;
+CREATE TABLE visits (
+    date DATE,
+    vet_id INT,
+    animal_id INT
+);
