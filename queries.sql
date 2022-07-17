@@ -129,3 +129,60 @@ SELECT species, AVG(escape_attempts)
   FROM animals
  WHERE date_of_birth BETWEEN '01-01-1990' AND '12-31-2000'
  GROUP BY species;
+
+-- Modify your inserted animals so it includes the species_id value:
+-- If the name ends in "mon" it will be Digimon
+-- All other animals are Pokemon
+UPDATE animals
+   SET species_id = 2 WHERE name LIKE '%mon';
+
+UPDATE animals
+   SET species_id = 1
+ WHERE species_id IS NULL;
+
+-- What animals belong to Melody Pond?
+SELECT a.name
+  FROM owners o
+ INNER JOIN animals a
+    ON o.id = a.owner_id
+ WHERE o.full_name = 'Melody Pond';
+
+-- List of all animals that are pokemon (their type is Pokemon).
+SELECT a.name
+  FROM animals a
+ INNER JOIN species s ON a.species_id = s.id
+ WHERE s.name = 'Pokemon';
+
+-- List all owners and their animals, remember to include those that don't own any animal.
+SELECT o.full_name, a.name
+  FROM animals a
+  FULL OUTER JOIN owners o ON o.id = a.owner_id;
+
+-- How many animals are there per species?
+SELECT s.name, COUNT(a.species_id)
+  FROM species s
+ INNER JOIN animals a on s.id = a.species_id
+ GROUP BY s.name;
+
+-- List all Digimon owned by Jennifer Orwell.
+SELECT a.name
+  FROM animals a
+ INNER JOIN species s ON s.id = a.species_id
+ INNER JOIN owners o ON a.owner_id = o.id
+ WHERE o.full_name = 'Jennifer Orwell' AND s.name = 'Digimon';
+
+-- List all animals owned by Dean Winchester that haven't tried to escape.
+SELECT a.name
+  FROM animals a
+ INNER JOIN species s ON s.id = a.species_id
+ INNER JOIN owners o ON a.owner_id = o.id
+ WHERE o.full_name = 'Dean Winchester' AND a.escape_attempts = 0;
+
+-- Who owns the most animals?
+SELECT o.full_name, COUNT(a.name)
+  FROM animals a
+ INNER JOIN species s ON s.id = a.species_id
+ INNER JOIN owners o ON a.owner_id = o.id
+ GROUP BY o.full_name
+ ORDER BY COUNT(a.name) DESC
+ LIMIT 1;
