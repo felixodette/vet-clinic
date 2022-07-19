@@ -204,10 +204,10 @@ SELECT COUNT(DISTINCT (a.name))
  WHERE v.name LIKE '%Mendez%';
 
 -- List all vets and their specialties, including vets with no specialties.
-SELECT *
-  FROM vets v
-  FULL OUTER JOIN specialization s on v.id = s.vet_id
-  FULL OUTER JOIN species sp ON s.species_id = sp.id;
+SELECT v.name, sp.name
+  FROM specialization s
+ RIGHT OUTER JOIN vets v ON v.id = s.vet_id
+  LEFT OUTER JOIN species sp ON sp.id = s.species_id;
 
 -- List all animals that visited Stephanie Mendez between April 1st and August 30th, 2020.
 SELECT a.name
@@ -244,7 +244,12 @@ SELECT a.name, a.date_of_birth, a.escape_attempts, a.neutered, v.name, v.date_of
  LIMIT 1;
 
 -- How many visits were with a vet that did not specialize in that animal's species?
-
+SELECT COUNT(*)
+  FROM vets v
+  JOIN visits vi on v.id = vi.vet_id
+  JOIN animals a ON vi.animal_id = a.id
+  JOIN specialization s on v.id = s.vet_id
+ WHERE NOT s.species_id = a.species_id;
 
 -- What specialty should Maisy Smith consider getting? Look for the species she gets the most.
 SELECT a.name, COUNT(vi.date) AS visits
